@@ -1,0 +1,32 @@
+{
+  "servers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"]
+    },
+    "playwright": { "command": "npx", "args": ["-y", "@playwright/mcp@latest"] },
+    "chrome-devtools": { "command": "npx", "args": ["-y", "chrome-devtools-mcp@latest"] },
+    "filesystem": { "command": "npx", "args": ["-y", "@modelcontextprotocol/server-filesystem", "."] },
+    "linear": { "type": "http", "url": "https://mcp.linear.app/mcp" }
+  },
+  "profiles": {
+    "frontend": {
+      "description": "Browser testing, read-only GitHub",
+      "servers": ["playwright", "github"],
+      "tools": {
+        "playwright": ["browser_navigate", "browser_click", "browser_type", "browser_snapshot", "browser_take_screenshot"],
+        "github": ["get_*", "list_*", "search_*"]
+      }
+    },
+    "backend": {
+      "description": "Code + issues, no browser",
+      "servers": ["filesystem", "github", "linear"],
+      "tools": { "filesystem": ["read_*", "list_*", "search_files"] }
+    },
+    "debug-perf": {
+      "description": "Only the Chrome performance tools",
+      "servers": ["chrome-devtools"],
+      "tools": { "chrome-devtools": ["performance_*", "navigate_page", "take_snapshot"] }
+    }
+  }
+}
